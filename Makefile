@@ -17,7 +17,7 @@ setup:
 
 clean:
 	@echo "$(COLOR_HIGHLIGHT_BLUE)Cleaning apps...$(COLOR_CLEAR)"
-	@rm -rf build bin
+	@cd bin && ls | grep -v .gitignore | xargs rm -fr
 	@cd cmd/cli && make clean
 	@echo "$(COLOR_HIGHLIGHT_GREEN)Success!$(COLOR_CLEAR)"
 

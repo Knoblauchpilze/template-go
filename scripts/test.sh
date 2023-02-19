@@ -58,8 +58,18 @@ if [ "${DISPLAY_USAGE}" = "true" ] || [ "${TEST_DIRECTORY}" = "" ]; then
   exit 1
 fi
 
-# Generate processed arguments.
-# TODO: Handle this.
+# Check if go tests exist here.
+GO_TEST_FILES_COUNT=$(find ${TEST_DIRECTORY} -type f -name "*_test.go" | wc -l)
+
+if [ ${GO_TEST_FILES_COUNT} -eq 0 ]; then
+  echo "No tests found in ${TEST_DIRECTORY}"
+  exit 0
+fi
+
+# Collect sub-folders recursively (including .).
+cd ${TEST_DIRECTORY}
+echo "Testing ${TEST_DIRECTORY}"
+go test ./...
 
 # Register the exit code and propagate it if it is
 # non-zero (to indicate failure of the sub-program).

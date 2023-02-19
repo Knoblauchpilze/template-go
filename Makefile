@@ -21,6 +21,15 @@ clean:
 	@cd cmd/cli && make clean
 	@echo "$(COLOR_HIGHLIGHT_GREEN)Success!$(COLOR_CLEAR)"
 
+# https://stackoverflow.com/questions/3931741/why-does-make-think-the-target-is-up-to-date
+.PHONY: test
+test:
+	@echo "$(COLOR_HIGHLIGHT_BLUE)Testing internal...$(COLOR_CLEAR)"
+	./scripts/test.sh --dir internal
+	@echo "$(COLOR_HIGHLIGHT_BLUE)Testing pkg...$(COLOR_CLEAR)"
+	./scripts/test.sh --dir pkg
+	@echo "$(COLOR_HIGHLIGHT_GREEN)Success!$(COLOR_CLEAR)"
+
 # https://stackoverflow.com/questions/6273608/how-to-pass-argument-to-makefile-from-command-line
 run:
 	@echo "$(COLOR_HIGHLIGHT_BLUE)Running $(filter-out $@,$(MAKECMDGOALS))...$(COLOR_CLEAR)"

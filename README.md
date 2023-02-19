@@ -72,3 +72,5 @@ Tests in go are usually done by creating a test file at the same location as the
 A convenience target to run all tests is provided in the top level [Makefile](Makefile) under `make test`. Running this command will execute all the tests defined in the [internal](internal) and [pkg](pkg) folders.
 
 Adding a test is just a question of adding the corresponding `yourModule_test.go` file.
+
+The [test](test) folder can be used to store some test data or external tooling used to assess the behavior of applications or packages. This is generally not a place where tests' bodies should be written.

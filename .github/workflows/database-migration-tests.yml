@@ -22,7 +22,7 @@ jobs:
           filters: |
             ci:
               - '.github/workflows/database-migration-tests.yml'
-            test-db:
+            template-db:
               - 'database/template/**'
   validate-test-db:
     runs-on: ubuntu-latest

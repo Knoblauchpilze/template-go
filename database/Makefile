@@ -1,10 +1,10 @@
 # Default variables
-DB_PATH ?= users
+DB_PATH ?= template
 DB_HOST ?= localhost
 DB_PORT ?= 5432
-DB_NAME ?= db_user_service
-DB_USER ?= user_service_admin
-DB_PASSWORD ?= qn^K5^CwDtoG7PYNtVM6vhGim\#2om
+DB_NAME ?= db_template_service
+DB_USER ?= template_service_admin
+DB_PASSWORD ?= "comes-this-from-environment"
 
 MIGRATION_STEPS ?= 1
 

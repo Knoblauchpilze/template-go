@@ -7,7 +7,7 @@ COPY . .
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bin/app cmd/app/main.go
 COPY cmd/app/configs/*-prod.yml bin/configs/
 
-FROM alpine AS template-service
+FROM alpine AS template-go
 ARG GIT_COMMIT_HASH="undefined"
 ENV GIT_COMMIT_HASH=$GIT_COMMIT_HASH
 WORKDIR /app

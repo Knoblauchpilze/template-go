@@ -6,7 +6,7 @@ GRANT CONNECT ON DATABASE db_template_service TO template_service_user;
 
 \connect db_template_service
 
-CREATE SCHEMA template_service_schema AUTHORIZATION user_service_admin;
+CREATE SCHEMA template_service_schema AUTHORIZATION template_service_admin;
 
 SET search_path = template_service_schema;
 

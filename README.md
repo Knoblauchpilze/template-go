@@ -1,76 +1,111 @@
 
 # template-go
 
-A template to create a simple go project. The structure in this repository is meant to be easily extensible and to allow quick-start of a go application with internal packages and configuration.
+This repository defines a scaffolding project to kick-start a back-end application. It is meant to work best with a frontend service created using the [template-frontend](https://github.com/Knoblauchpilze/template-frontend).
+
+# Why this project?
+
+When building a back-end service, it is common to have to solve the same problems. This includes, among other things:
+* starting a server listening to incoming connections to serve requests.
+* interfacing with a database to get and save data.
+* publishing the service's code to a docker image that can be deployed in a cluster
+* etc.
+
+Those operations are usually quite similar from one service to the next. This is where this repository comes into play: by using it, you can kick-start a new back-end service in an instance, by using a scaffolding that provides most of the boilerplate you will need.
+
+# What does this repository provide?
+
+By using this repository and adapting it for a new project you will get, out of the box:
+* a working server which you can extend with your own endpoints.
+* a working CI, which allows to verify your work, run your tests and publish the result of your implementation.
+* a way to make the service available in `dockerhub` through a docker image.
+* the possibility to deploy automatically a new version of the service to a cluster management system.
+
+# Badges
+
+[![Build services](https://github.com/Knoblauchpilze/template-go/actions/workflows/build-and-push.yml/badge.svg)](https://github.com/Knoblauchpilze/template-go/actions/workflows/build-and-push.yml)
+
+[![codecov](https://codecov.io/gh/Knoblauchpilze/template-go/graph/badge.svg?token=D4V8SZODWV)](https://codecov.io/gh/Knoblauchpilze/template-go)
 
 # Installation
 
-- Clone the repo: `git clone git@github.com:Knoblauchpilze/template-go.git`.
-- Install Go from [here](https://go.dev/doc/install). **NOTE**: this project expects Go 1.20 to be available on the system.
-- Go to the project's directory `cd ~/path/to/the/repo`.
-- Compile and install: `make`.
-- Execute any application with `make run app_name`.
+## Prerequisites
 
-# General principle
+The tools described below are directly used by the project. It is mandatory to install them in order to build the project locally.
 
-This repository is divided into multiple sub-folders, each one having its own purpose. The structure is heavily inspired from the template project available in this [repository](https://github.com/golang-standards/project-layout).
+See the following links:
 
-This is the list of the folders that we kept:
-* [assets](https://github.com/Knoblauchpilze/template-go/tree/master/assets): holds all the resources for the project (images, logo, etc.).
-* [bin](https://github.com/Knoblauchpilze/template-go/tree/master/bin): the executables.
-* [cmd](https://github.com/Knoblauchpilze/template-go/tree/master/cmd): the list of applications defined by the project.
-* [configs](https://github.com/Knoblauchpilze/template-go/tree/master/configs): configuration file templates or defaults.
-* [internal](https://github.com/Knoblauchpilze/template-go/tree/master/internal): packages which we don't want to publish or make available to the public but are still needed by this project.
-* [pkg](https://github.com/Knoblauchpilze/template-go/tree/master/pkg): the public packages which are defined by this project and can be reused.
-* [scripts](https://github.com/Knoblauchpilze/template-go/tree/master/scripts): the list of scripts/tools used by this project.
-* [test](https://github.com/Knoblauchpilze/template-go/tree/master/test): where tests are stored.
+- [golang](https://go.dev/doc/install): this project was developed using go `1.23.2`.
+- [golang migrate](https://github.com/golang-migrate/migrate/blob/master/cmd/migrate/README.md): following the instructions there should be enough.
+- [postgresql](https://www.postgresql.org/) which can be taken from the packages with `sudo apt-get install postgresql-14` for example.
+- [docker](https://docs.docker.com/engine/install/ubuntu/): this is needed in case you want to build the docker image locally.
+
+## Cloning the repository
+
+Once the above steps have been completed, you can clone the repository with the following command:
+```bash
+git clone git@github.com:Knoblauchpilze/template-go.git
+```
+
+## Secrets in the CI
+
+The CI workflows define several secrets that are expected to be created for the repository when cloned/forked/used. Each secret should be self-explanatory based on its name. Below is a description of the ones used by this project:
+
+| Secret             | Description |
+| ------------------ | ----------- |
+| CODECOV_TOKEN      | A token generated from [codecov](https://about.codecov.io/) allowing to pubilsh the code coverage reports |
+| DOCKERHUB_USERNAME | Obtained from your account over at [dockerhub](https://hub.docker.com/), allows to publish the docker image of the service |
+| DOCKERHUB_TOKEN    | Also taken from [dockerhub](https://hub.docker.com), this authenticates the request to publish to the repositories |
+| DEPLOYMENT_TOKEN   | Used to trigger the automatic deployment of the service's latest  version over at [ec2-deployment](https://github.com/Knoblauchpilze/ec2-deployment) |
+
+# How does this project work?
+
+## General structure
+
+TODO: Project layout
+
+## The CI
+
+TODO
+
+# How to use this project to kick-start a new service?
+
+## Setting up the project
+
+TODO
+
+## Use the configure script
+
+TODO
+
+## What to modify next?
+
+TODO
 
 # How to extend this project
 
 ## Adding more packages
 
-The [pkg](https://github.com/Knoblauchpilze/template-go/tree/master/pkg) is where you want to go. This allows to easily group features by topic and reference them in the applications.
+TODO
 
-For example let's say the user wants to create a package called `example` and used it in an app called `cli`. From the folder perspective, a new package is created like this:
+## Creating secrets
 
-![Package folder structure](assets/readme/package.png)
+TODO
 
-Then in the [printer.go](pkg/example/printer.go) file, this is how the code could look:
-```go
-package example
+## Deploying the service
 
-func func1() {
-  /* do something */
-}
-```
+As mentioned in the [secrets](#secrets-in-the-ci) section, this project is configured to automatically update the deployment over at [ec2-deployment](https://github.com/Knoblauchpilze/ec2-deployment). This is achieved by:
+* pushing the docker image of the service to `dockerhub`.
+* triggering a commit to the `ec2-deployment` repository.
 
-To reference this in the [cli](cmd/cli) app, this is how it could look:
-```go
-package main
+In case you have a similar workflow, it is easy to update the `DEPLOYMENT_TOKEN` to point to another repository and to modify the [CI workflow](.github/workflows/build-and-push.yml) in the `update-deployment` step to deploy to another repository.
 
-import "github.com/KnoblauchPilze/template-go/pkg/example"
+In case you don't use `dockerhub` but another system to store the docker image (or don't use docker images at all), then you might need to rewrite part of the CI workflow (namely the `build-and-push-docker-image` step).
 
-func main() {
-	example.PrintHelloWorld("cli")
-}
-```
+Once updated, this should automatically trigger a commit in the `ec2-deployment` (or any other repository) with the latest update. The commit message should be explicit enough:
 
-## Adding an application
+![Example commit messages](resources/commit-messages-example.png)
 
-Apps are stored in the [cmd](cmd) folder. Each application has its own directory: this eases the separation of concerns.
+## Working and developing on a new project
 
-This project comes with an example app called [cli](cmd/cli) which doesn't do much.
-
-In order to make things easy, a [Makefile](cmd/cli/Makefile) is provided to compile the app. This `Makefile` is also able to install the result of the compilation of the application in the top level `bin` folder so that it can easily be executed.
-
-So a typical example would be to develop in the [cmd/cli](cmd/cli) folder, and when the user is satistifed with the result it can install the app through running `make install`. This will 'publish' the application in the root `bin` folder: the binary can then be used by other applications or to perform operations.
-
-## Tests
-
-Tests in go are usually done by creating a test file at the same location as the package to test. This template project comes with an example package and a test in [pkg/example](pkg/example).
-
-A convenience target to run all tests is provided in the top level [Makefile](Makefile) under `make test`. Running this command will execute all the tests defined in the [internal](internal) and [pkg](pkg) folders.
-
-Adding a test is just a question of adding the corresponding `yourModule_test.go` file.
-
-The [test](test) folder can be used to store some test data or external tooling used to assess the behavior of applications or packages. This is generally not a place where tests' bodies should be written.
+TODO

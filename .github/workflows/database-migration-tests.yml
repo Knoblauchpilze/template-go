@@ -24,7 +24,7 @@ jobs:
               - '.github/workflows/database-migration-tests.yml'
             template-db:
               - 'database/template/**'
-  validate-test-db:
+  validate-template-db:
     runs-on: ubuntu-latest
     needs: [detect-code-changes]
     if: ${{ needs.detect-code-changes.outputs.template-db == 'true' || needs.detect-code-changes.outputs.ci == 'true' }}

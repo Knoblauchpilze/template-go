@@ -1,5 +1,5 @@
 Server:
   Port: 60001
 Database:
-  User: replace-this-with-the-db-user
+  User: template_service_manager
   Password: replace-this-with-the-db-password

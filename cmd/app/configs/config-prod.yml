@@ -1,5 +1,5 @@
 Server:
   Port: 80
 Database:
-  User: replace-this-with-the-db-user
+  User: template_service_manager
   Password: comes-from-the-environment

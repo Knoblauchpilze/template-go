@@ -89,7 +89,7 @@ jobs:
             -f template/db_user_create.sql
           psql \
             postgresql://postgres@localhost \
-            -f test/db_create.sql
+            -f template/db_create.sql
         working-directory: ./database
         env:
           PGPASSWORD: postgres

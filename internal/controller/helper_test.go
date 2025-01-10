@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var dbTestConfig = postgresql.NewConfigForLocalhost("db_user_service", "user_service_manager", "g#udwTagQ*qKi8qdFU7&e6LaJhe%W")
+var dbTestConfig = postgresql.NewConfigForLocalhost("db_template_service", "template_service_manager", "manager_password")
 
 func newTestConnection(t *testing.T) db.Connection {
 	conn, err := db.New(context.Background(), dbTestConfig)

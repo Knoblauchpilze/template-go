@@ -62,11 +62,28 @@ The CI workflows define several secrets that are expected to be created for the 
 
 ## General structure
 
-TODO: Project layout
+The structure provided in this template project should allow to easily extend it. It should also allow to guide the development to add new features in a way that is consistent with best practictes.
+
+Generally speaking it is loosely based on the [project layout](https://github.com/golang-standards/project-layout) defined in the `golang-standards`. Note that as mentioned in the Github repository it is not a **standard** per se but rather some guidelines. For having tried it this suits our needs and therefore is now present in this template.
+
+The project layout looks as follows:
+
+![Project structure](resources/project-structure.png)
+
+We can distinguish several groups of folders in this architecture:
+* `.github` is linked to the CI.
+* `build` contains the necessary elements to build a docker image of the service.
+* `database` contains the definition of the databases needed by the services of the project.
+* `cmd` is where the different services are living: one folder per service.
+* `internal` and `pkg` are meant to hold the common code used by the services.
 
 ## The CI
 
-TODO
+The CI lives in the [.github](.github) folder and contains two main workflows:
+* [build-and-push](.github/workflows/build-and-push.yml) defines the logic to build the service's docker image and publish it after the tests have passed.
+* [database-migration-tests](.github/workflows/database-migration-tests.yml) verifies that the databases associated to the services are consistent and can be successfully migrated up from an empty `postgres` server.
+
+The CI is already working and uses the secrets as defined in the dedicated [section](#secrets-in-the-ci).
 
 # How to use this project to kick-start a new service?
 
@@ -84,13 +101,36 @@ TODO
 
 # How to extend this project
 
-## Adding more packages
-
-TODO
-
 ## Creating secrets
 
-TODO
+The secrets needed by default by this project are described in [a previous section](#secrets-in-the-ci). If you fork/copy this repository you will have to create them and fill them with your own data.
+
+Note that:
+* the CI by default does not try to upload the code coverage when `dependabot` creates a commit. This is because of issue [#3253](https://github.com/dependabot/dependabot-core/issues/3253): you could change this behavior and rather also create the secrets in the `Dependabot` section of the project's settings.
+
+## Adding more packages
+
+A typical architecture of a more 'complex' project looks like so:
+
+![More complex project structure](resources/complete-project-structure.png)
+
+Most of the common DTOs, entities and repositories are in the `pkg` folder while the services and controllers are in `internal`. This choice can of course be challenged and adapted in your own projects.
+
+## Adding new services
+
+Service definitions are living in the [cmd](cmd) folder. In case you need to add a new one you can create a new folder with the name of the service.
+
+Note that this project is more intended to keep a single service per repository: if you want to change this you will have to modify the CI to allow building and deploying multiple services.
+
+**Note:** the `configure` script (see [this](#use-the-configure-script) section) will take care of renaming the default template service to a name of your choosing (and matching the name of the project).
+
+## Adding new databases
+
+Database definitions are living in the [database](database) folder. In case you need some new ones you can add them in the directory. The scripts provided in the template should allow to create/update/delete any database as they expect you to provide the path to the database to migrate.
+
+You will also need to update the CI to account for this new database:
+* in the [database-migration-tests](.github/workflows/database-migration-tests.yml): add a new step to migrate and verify the setup of the new database.
+* in the [build-and-push](.github/workflows/build-and-push.yml): add a step to configure the database for services (and packages) that need it.
 
 ## Deploying the service
 
@@ -105,7 +145,3 @@ In case you don't use `dockerhub` but another system to store the docker image (
 Once updated, this should automatically trigger a commit in the `ec2-deployment` (or any other repository) with the latest update. The commit message should be explicit enough:
 
 ![Example commit messages](resources/commit-messages-example.png)
-
-## Working and developing on a new project
-
-TODO

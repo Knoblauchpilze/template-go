@@ -110,7 +110,7 @@ Note that:
 
 ## Adding more packages
 
-A typical architecture of a more 'complex' project looks like so:
+A typical architecture of a more 'complex' project looks like so (taken from the [galactic-sovereign](https://github.com/Knoblauchpilze/galactic-sovereign) project):
 
 ![More complex project structure](resources/complete-project-structure.png)
 

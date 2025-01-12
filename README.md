@@ -87,26 +87,16 @@ The CI is already working and uses the secrets as defined in the dedicated [sect
 
 # How to use this project to kick-start a new service?
 
-## Setting up the project
+## Creating secrets
 
-TODO
+The secrets needed by default by this project are described in [a previous section](#secrets-in-the-ci). If you fork/copy this repository you will have to create them and fill them with your own data.
+
+Note that the CI by default does not try to upload the code coverage when `dependabot` creates a commit. This is because of issue [#3253](https://github.com/dependabot/dependabot-core/issues/3253): you could change this behavior and rather also create the secrets in the `Dependabot` section of the project's settings.
 
 ## Use the configure script
 
 TODO
 
-## What to modify next?
-
-TODO
-
-# How to extend this project
-
-## Creating secrets
-
-The secrets needed by default by this project are described in [a previous section](#secrets-in-the-ci). If you fork/copy this repository you will have to create them and fill them with your own data.
-
-Note that:
-* the CI by default does not try to upload the code coverage when `dependabot` creates a commit. This is because of issue [#3253](https://github.com/dependabot/dependabot-core/issues/3253): you could change this behavior and rather also create the secrets in the `Dependabot` section of the project's settings.
 
 ## Adding more packages
 

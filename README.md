@@ -21,6 +21,15 @@ By using this repository and adapting it for a new project you will get, out of 
 * a way to make the service available in `dockerhub` through a docker image.
 * the possibility to deploy automatically a new version of the service to a cluster management system.
 
+Assuming you install the [prerequisite tools](#prerequisites) you can get started by running two simple commands:
+
+```bash
+./scripts/configure-database.sh my-new-database-name
+./scripts/configure.sh my-new-project-name
+```
+
+This will give you a service that you can deploy immediately after you pushed the code!
+
 # Badges
 
 [![Build services](https://github.com/Knoblauchpilze/template-go/actions/workflows/build-and-push.yml/badge.svg)](https://github.com/Knoblauchpilze/template-go/actions/workflows/build-and-push.yml)
@@ -85,7 +94,21 @@ The CI lives in the [.github](.github) folder and contains two main workflows:
 
 The CI is already working and uses the secrets as defined in the dedicated [section](#secrets-in-the-ci).
 
+## Healthcheck
+
+An important part of deploying a service is monitoring its health. There are multiple ways to do this. A common approach is to use the [health endpoint monitoring](https://learn.microsoft.com/en-us/azure/architecture/patterns/health-endpoint-monitoring) pattern.
+
+The basis of this approach is that services should provide an endpoint allowing to know whether they are 'healthy' (meaning that we expect nominal behavior when querying the service's endpoints) or not (meaning that we can expect degraded performance when querying the service's endpoints with failures or delays).
+
+The template project comes with a working healthcheck endpoint which can be used nicely with [traefik](https://doc.traefik.io/traefik/routing/services/#health-check) health checking mechanism for example.
+
+In case more logic is needed to determine whether your service is healthy or not you can extend the logic currently defined over in the [healthcheck](internal/controller/health_check.go) function.
+
 # How to use this project to kick-start a new service?
+
+⚠️ the logic to automatically rename some portions of the template project to match a user-defined name assumes that the name you choose does not contain any whitespade character.
+
+In case it does, the renaming will most likely not work as intended or produce a broken project configuration. Use with caution.
 
 ## Creating secrets
 
@@ -93,10 +116,42 @@ The secrets needed by default by this project are described in [a previous secti
 
 Note that the CI by default does not try to upload the code coverage when `dependabot` creates a commit. This is because of issue [#3253](https://github.com/dependabot/dependabot-core/issues/3253): you could change this behavior and rather also create the secrets in the `Dependabot` section of the project's settings.
 
+## Use the configure_database script
+
+**Note:** this script should be run before the `configure.sh` script defined in the following section.
+
+The service comes configured with a test database having a dummy table. This is to help having already some tests configured and to lay out a common procedure to create databases in a reliable way.
+
+When extending this project for a new service, you should probably modify the migrations in [database/template/migrations](database/template/migrations) to match what you want.
+
+To handle a first update to the database name and make sure that the service uses a database that matches its name, you can use the [configure-database.sh](scripts/configure-database.sh) script. It will take care of:
+* renaming the database to the new name.
+* updating the CI workflow to test the new database.
+* modify the configuration files from the template service to use the new database.
+
+You can run the following:
+
+```bash
+./scripts/configure-database.sh my-database-name
+```
+
+If everything goes well you should obtain a repository with the following structure:
+
+TODO: Include screenshot when script works.
+
 ## Use the configure script
 
-TODO
+Once you configured the database (or removed it if you don't need it), you can use the [configure.sh](scripts/configure.sh) script to rename important parts of the template to something that matches your desired architecture.
 
+This can be achieved by running the following command:
+
+```bash
+./scripts/configure.sh my-new-project
+```
+
+If everything goes well you should obtain a repository with the following structure:
+
+TODO: Include screenshot when script works.
 
 ## Adding more packages
 
@@ -121,6 +176,10 @@ Database definitions are living in the [database](database) folder. In case you 
 You will also need to update the CI to account for this new database:
 * in the [database-migration-tests](.github/workflows/database-migration-tests.yml): add a new step to migrate and verify the setup of the new database.
 * in the [build-and-push](.github/workflows/build-and-push.yml): add a step to configure the database for services (and packages) that need it.
+
+## End-to-end testing
+
+TODO
 
 ## Deploying the service
 

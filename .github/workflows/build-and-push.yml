@@ -47,12 +47,12 @@ jobs:
           go-version: "1.23.2"
       - name: Run tests with coverage
         run: go test -run='^TestUnit_.*' ./... -coverpkg=./... -race -covermode=atomic -coverprofile=coverage.out
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          fail_ci_if_error: true
-          files: ./coverage.out
-          token: ${{ secrets.CODECOV_TOKEN }}
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v5
+      #   with:
+      #     fail_ci_if_error: true
+      #     files: ./coverage.out
+      #     token: ${{ secrets.CODECOV_TOKEN }}
 
   it-tests:
     runs-on: ubuntu-latest
@@ -107,12 +107,12 @@ jobs:
           PGPASSWORD: admin_password
       - name: Run tests with coverage
         run: go test -run='^TestIT_.*' ./... -coverpkg=./... -race -covermode=atomic -coverprofile=coverage.out
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          fail_ci_if_error: true
-          files: ./coverage.out
-          token: ${{ secrets.CODECOV_TOKEN }}
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v5
+      #   with:
+      #     fail_ci_if_error: true
+      #     files: ./coverage.out
+      #     token: ${{ secrets.CODECOV_TOKEN }}
 
   extract-service-tag:
     runs-on: ubuntu-latest

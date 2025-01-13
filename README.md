@@ -175,7 +175,21 @@ You will also need to update the CI to account for this new database:
 
 ## End-to-end testing
 
-TODO
+This project provides minimal E2E testing for the services. E2E testing is an important part of testing software (see [this](https://martinfowler.com/articles/practical-test-pyramid.html) article).
+
+We tried to find some resources online to see common practices on how to E2E test an app in Go but could not find too much. This [reddit](https://www.reddit.com/r/golang/comments/cf4pfv/what_is_the_recommended_way_to_write_end_to_end/) post summarizes the consensus: it depends.
+
+Over the course of the development of the services, we noticed that what is important is to verify that the service can be started properly from the docker image built by the CI.
+
+Exhaustive testing of the API endpoints is interesting as well but is partially covered by the unit tests. We might give a go at the approach but for now we chose to only limit the E2E testing to:
+* pull the docker image of the latest revision
+* spin it up and start it (with a database properly migrated)
+* query the healthcheck endpoint
+* assert that the response matches what we expect (200 OK and success response envelop).
+
+This is likely to catch problems in case the configuration is not properly set or if the docker image is somehow broken. This is enough for our purpose.
+
+We might revisit this approach in the future if needed.
 
 ## Deploying the service
 

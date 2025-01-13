@@ -1,5 +1,5 @@
 
-APPLICATION ?= app
+APPLICATION ?= articles
 
 setup:
 	mkdir -p build/bin

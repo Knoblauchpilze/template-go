@@ -8,8 +8,8 @@ import (
 	"github.com/KnoblauchPilze/backend-toolkit/pkg/db"
 	"github.com/KnoblauchPilze/backend-toolkit/pkg/logger"
 	"github.com/KnoblauchPilze/backend-toolkit/pkg/server"
-	"github.com/KnoblauchPilze/template-go/cmd/app/internal"
-	"github.com/KnoblauchPilze/template-go/internal/controller"
+	"github.com/KnoblauchPilze/articles/cmd/articles/internal"
+	"github.com/KnoblauchPilze/articles/internal/controller"
 )
 
 func determineConfigName() string {

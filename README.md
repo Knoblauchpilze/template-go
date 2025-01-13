@@ -135,9 +135,7 @@ You can run the following:
 ./scripts/configure-database.sh my-database-name
 ```
 
-If everything goes well you should obtain a repository with the following structure:
-
-TODO: Include screenshot when script works.
+Check out [PR #2](https://github.com/Knoblauchpilze/template-go/pull/2) and [PR #3](https://github.com/Knoblauchpilze/template-go/pull/3) for more information on the end result of applying this script.
 
 ## Use the configure script
 
@@ -149,9 +147,7 @@ This can be achieved by running the following command:
 ./scripts/configure.sh my-new-project
 ```
 
-If everything goes well you should obtain a repository with the following structure:
-
-TODO: Include screenshot when script works.
+Check out [PR #2](https://github.com/Knoblauchpilze/template-go/pull/2) and [PR #3](https://github.com/Knoblauchpilze/template-go/pull/3) for more information on the end result of applying this script.
 
 ## Adding more packages
 

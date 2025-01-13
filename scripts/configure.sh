@@ -33,5 +33,5 @@ echo "Initializing git repository..."
 rm -rf .git
 git init
 
-echo "All set! Don't forget to update the README and run the configure-database.sh script!"
+echo "All set! Don't forget to update the README!"
 

@@ -1,5 +1,5 @@
 
-APPLICATION ?= app
+APPLICATION ?= products
 
 setup:
 	mkdir -p build/bin

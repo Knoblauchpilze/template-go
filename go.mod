@@ -1,4 +1,4 @@
-module github.com/KnoblauchPilze/template-go
+module github.com/KnoblauchPilze/products
 
 go 1.23.2
 

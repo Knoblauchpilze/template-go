@@ -141,10 +141,10 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./build/template-go/Dockerfile
+          file: ./build/products/Dockerfile
           build-args: GIT_COMMIT_HASH=${{ needs.extract-service-tag.outputs.version }}
           push: true
-          tags: totocorpsoftwareinc/template-go:${{ needs.extract-service-tag.outputs.version }}
+          tags: totocorpsoftwareinc/products:${{ needs.extract-service-tag.outputs.version }}
 
   e2e-tests:
     runs-on: ubuntu-latest
@@ -204,7 +204,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Pull latest docker image
         run: |
-          docker pull totocorpsoftwareinc/template-go:${{ needs.extract-service-tag.outputs.version }}
+          docker pull totocorpsoftwareinc/products:${{ needs.extract-service-tag.outputs.version }}
       - name: Test docker image
         # https://superuser.com/questions/272265/getting-curl-to-output-http-status-code
         # https://stackoverflow.com/questions/24254064/how-to-get-curl-to-output-only-http-response-body-json-and-no-other-headers-et
@@ -212,14 +212,14 @@ jobs:
         run: |
           docker run \
             -d \
-            --name template-go-test \
+            --name products-test \
             -e ENV_SERVER_PORT=$PORT \
             -e ENV_DATABASE_PASSWORD=$DATABASE_PASSWORD \
             -p 1234:1234 \
-            totocorpsoftwareinc/template-go:${{ needs.extract-service-tag.outputs.version }}
+            totocorpsoftwareinc/products:${{ needs.extract-service-tag.outputs.version }}
           echo "status_code=$(curl -s -o /dev/null -w %{http_code} localhost:1234/v1/healthcheck)" >> $GITHUB_OUTPUT
           echo "response_body=$(curl -s localhost:1234/v1/healthcheck)" >> $GITHUB_OUTPUT
-          docker stop template-go-test
+          docker stop products-test
         id: test-results
         env:
           PORT: 1234
@@ -255,11 +255,11 @@ jobs:
           token: ${{ secrets.DEPLOYMENT_TOKEN }}
       - name: Update service tag
         run: |
-          echo "${{ needs.extract-service-tag.outputs.version }}" > ./build/template-go/version.txt
+          echo "${{ needs.extract-service-tag.outputs.version }}" > ./build/products/version.txt
       - name: "Commit changes"
         run: |
           git pull
           git config --global user.name 'totocorpbot'
           git config --global user.email 'totocorpbot@users.noreply.github.com'
-          git commit -am "infra: Bumped template-go version to ${{ needs.extract-service-tag.outputs.version }}"
+          git commit -am "infra: Bumped products version to ${{ needs.extract-service-tag.outputs.version }}"
           git push

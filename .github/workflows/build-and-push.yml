@@ -86,10 +86,10 @@ jobs:
             -v admin_password=$ADMIN_PASSWORD \
             -v manager_password=$MANAGER_PASSWORD \
             -v user_password=$USER_PASSWORD \
-            -f template/db_user_create.sql
+            -f products/db_user_create.sql
           psql \
             postgresql://postgres@localhost \
-            -f template/db_create.sql
+            -f products/db_create.sql
         working-directory: ./database
         env:
           PGPASSWORD: postgres
@@ -99,8 +99,8 @@ jobs:
       - name: Migrate schema up
         run: |
           migrate \
-            -path template/migrations \
-            -database postgresql://template_service_admin@localhost/db_template_service?sslmode=disable \
+            -path products/migrations \
+            -database postgresql://products_admin@localhost/db_products?sslmode=disable \
             up
         working-directory: ./database
         env:
@@ -171,17 +171,17 @@ jobs:
           go-version: "1.23.2"
       - name: Install migrate tool
         run: go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
-      - name: Setup template database
+      - name: Setup products database
         run: |
           psql \
             postgresql://postgres@localhost \
             -v admin_password=$ADMIN_PASSWORD \
             -v manager_password=$MANAGER_PASSWORD \
             -v user_password=$USER_PASSWORD \
-            -f template/db_user_create.sql
+            -f products/db_user_create.sql
           psql \
             postgresql://postgres@localhost \
-            -f template/db_create.sql
+            -f products/db_create.sql
         working-directory: ./database
         env:
           PGPASSWORD: postgres
@@ -191,8 +191,8 @@ jobs:
       - name: Migrate schema up
         run: |
           migrate \
-            -path template/migrations \
-            -database postgresql://template_service_admin@localhost/db_template_service?sslmode=disable \
+            -path products/migrations \
+            -database postgresql://products_admin@localhost/db_products?sslmode=disable \
             up
         working-directory: ./database
         env:

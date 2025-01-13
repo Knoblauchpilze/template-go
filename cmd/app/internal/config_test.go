@@ -17,8 +17,8 @@ func TestUnit_DefaultConfig_SetsExpectedDbConnection(t *testing.T) {
 	config := DefaultConfig()
 
 	assert.Equal(t, "172.17.0.1", config.Database.Host)
-	assert.Equal(t, "db_template_service", config.Database.Database)
-	assert.Equal(t, "template_service_manager", config.Database.User)
+	assert.Equal(t, "db_products", config.Database.Database)
+	assert.Equal(t, "products_manager", config.Database.User)
 }
 
 func TestUnit_DefaultConfig_DoesNotSetDbPassword(t *testing.T) {

@@ -13,8 +13,8 @@ type Configuration struct {
 }
 
 func DefaultConfig() Configuration {
-	const defaultDatabaseName = "db_template_service"
-	const defaultDatabaseUser = "template_service_manager"
+	const defaultDatabaseName = "db_products"
+	const defaultDatabaseUser = "products_manager"
 
 	return Configuration{
 		Server: server.Config{

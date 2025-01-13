@@ -1,9 +1,9 @@
 # Default variables
-DB_PATH ?= template
+DB_PATH ?= products
 DB_HOST ?= localhost
 DB_PORT ?= 5432
-DB_NAME ?= db_template_service
-DB_USER ?= template_service_admin
+DB_NAME ?= db_products
+DB_USER ?= products_admin
 DB_PASSWORD ?= "comes-this-from-environment"
 
 MIGRATION_STEPS ?= 1

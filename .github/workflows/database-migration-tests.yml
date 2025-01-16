@@ -73,11 +73,17 @@ jobs:
           PGPASSWORD: postgres
       - name: Migrate schema up
         run: |
-          migrate -path template/migrations -database postgresql://template_service_admin@localhost/db_template_service?sslmode=disable up
+          migrate \
+            -path template/migrations \
+            -database postgresql://template_service_admin@localhost/db_template_service?sslmode=disable \
+            up
         env:
           PGPASSWORD: admin_password
       - name: Migrate schema down
         run: |
-          migrate -path template/migrations -database postgresql://template_service_admin@localhost/db_template_service?sslmode=disable down -all
+          migrate \
+            -path template/migrations \
+            -database postgresql://template_service_admin@localhost/db_template_service?sslmode=disable \
+            down -all
         env:
           PGPASSWORD: admin_password

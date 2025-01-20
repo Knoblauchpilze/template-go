@@ -4,12 +4,12 @@ import (
 	"context"
 	"os"
 
-	"github.com/KnoblauchPilze/backend-toolkit/pkg/config"
-	"github.com/KnoblauchPilze/backend-toolkit/pkg/db"
-	"github.com/KnoblauchPilze/backend-toolkit/pkg/logger"
-	"github.com/KnoblauchPilze/backend-toolkit/pkg/server"
-	"github.com/KnoblauchPilze/template-go/cmd/app/internal"
-	"github.com/KnoblauchPilze/template-go/internal/controller"
+	"github.com/Knoblauchpilze/backend-toolkit/pkg/config"
+	"github.com/Knoblauchpilze/backend-toolkit/pkg/db"
+	"github.com/Knoblauchpilze/backend-toolkit/pkg/logger"
+	"github.com/Knoblauchpilze/backend-toolkit/pkg/server"
+	"github.com/Knoblauchpilze/template-go/cmd/app/internal"
+	"github.com/Knoblauchpilze/template-go/internal/controller"
 )
 
 func determineConfigName() string {

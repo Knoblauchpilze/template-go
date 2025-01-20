@@ -1,9 +1,9 @@
-module github.com/KnoblauchPilze/template-go
+module github.com/Knoblauchpilze/template-go
 
 go 1.23.2
 
 require (
-	github.com/KnoblauchPilze/backend-toolkit v0.2.1
+	github.com/Knoblauchpilze/backend-toolkit v0.3.0
 	github.com/labstack/echo/v4 v4.13.3
 	github.com/stretchr/testify v1.10.0
 )

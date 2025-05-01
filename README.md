@@ -1,4 +1,3 @@
-
 # template-go
 
 This repository defines a scaffolding project to kick-start a back-end application. It is meant to work best with a frontend service created using the [template-frontend](https://github.com/Knoblauchpilze/template-frontend).
@@ -6,20 +5,22 @@ This repository defines a scaffolding project to kick-start a back-end applicati
 # Why this project?
 
 When building a back-end service, it is common to have to solve the same problems. This includes, among other things:
-* starting a server listening to incoming connections to serve requests.
-* interfacing with a database to get and save data.
-* publishing the service's code to a docker image that can be deployed in a cluster
-* etc.
+
+- starting a server listening to incoming connections to serve requests.
+- interfacing with a database to get and save data.
+- publishing the service's code to a docker image that can be deployed in a cluster
+- etc.
 
 Those operations are usually quite similar from one service to the next. This is where this repository comes into play: by using it, you can kick-start a new back-end service in an instance, by using a scaffolding that provides most of the boilerplate you will need.
 
 # What does this repository provide?
 
 By using this repository and adapting it for a new project you will get, out of the box:
-* a working server which you can extend with your own endpoints.
-* a working CI, which allows to verify your work, run your tests and publish the result of your implementation.
-* a way to make the service available in `dockerhub` through a docker image.
-* the possibility to deploy automatically a new version of the service to a cluster management system.
+
+- a working server which you can extend with your own endpoints.
+- a working CI, which allows to verify your work, run your tests and publish the result of your implementation.
+- a way to make the service available in `dockerhub` through a docker image.
+- the possibility to deploy automatically a new version of the service to a cluster management system.
 
 Assuming you install the [prerequisite tools](#prerequisites) you can get started by running two simple commands:
 
@@ -52,6 +53,7 @@ See the following links:
 ## Cloning the repository
 
 Once the above steps have been completed, you can clone the repository with the following command:
+
 ```bash
 git clone git@github.com:Knoblauchpilze/template-go.git
 ```
@@ -60,12 +62,12 @@ git clone git@github.com:Knoblauchpilze/template-go.git
 
 The CI workflows define several secrets that are expected to be created for the repository when cloned/forked/used. Each secret should be self-explanatory based on its name. Below is a description of the ones used by this project:
 
-| Secret             | Description |
-| ------------------ | ----------- |
-| CODECOV_TOKEN      | A token generated from [codecov](https://about.codecov.io/) allowing to pubilsh the code coverage reports |
-| DOCKERHUB_USERNAME | Obtained from your account over at [dockerhub](https://hub.docker.com/), allows to publish the docker image of the service |
-| DOCKERHUB_TOKEN    | Also taken from [dockerhub](https://hub.docker.com), this authenticates the request to publish to the repositories |
-| DEPLOYMENT_TOKEN   | Used to trigger the automatic deployment of the service's latest  version over at [ec2-deployment](https://github.com/Knoblauchpilze/ec2-deployment) |
+| Secret             | Description                                                                                                                                         |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CODECOV_TOKEN      | A token generated from [codecov](https://about.codecov.io/) allowing to pubilsh the code coverage reports                                           |
+| DOCKERHUB_USERNAME | Obtained from your account over at [dockerhub](https://hub.docker.com/), allows to publish the docker image of the service                          |
+| DOCKERHUB_TOKEN    | Also taken from [dockerhub](https://hub.docker.com), this authenticates the request to publish to the repositories                                  |
+| DEPLOYMENT_TOKEN   | Used to trigger the automatic deployment of the service's latest version over at [ec2-deployment](https://github.com/Knoblauchpilze/ec2-deployment) |
 
 # How does this project work?
 
@@ -80,17 +82,19 @@ The project layout looks as follows:
 ![Project structure](resources/project-structure.png)
 
 We can distinguish several groups of folders in this architecture:
-* `.github` is linked to the CI.
-* `build` contains the necessary elements to build a docker image of the service.
-* `database` contains the definition of the databases needed by the services of the project.
-* `cmd` is where the different services are living: one folder per service.
-* `internal` and `pkg` are meant to hold the common code used by the services.
+
+- `.github` is linked to the CI.
+- `build` contains the necessary elements to build a docker image of the service.
+- `database` contains the definition of the databases needed by the services of the project.
+- `cmd` is where the different services are living: one folder per service.
+- `internal` and `pkg` are meant to hold the common code used by the services.
 
 ## The CI
 
 The CI lives in the [.github](.github) folder and contains two main workflows:
-* [build-and-push](.github/workflows/build-and-push.yml) defines the logic to build the service's docker image and publish it after the tests have passed.
-* [database-migration-tests](.github/workflows/database-migration-tests.yml) verifies that the databases associated to the services are consistent and can be successfully migrated up from an empty `postgres` server.
+
+- [build-and-push](.github/workflows/build-and-push.yml) defines the logic to build the service's docker image and publish it after the tests have passed.
+- [database-migration-tests](.github/workflows/database-migration-tests.yml) verifies that the databases associated to the services are consistent and can be successfully migrated up from an empty `postgres` server.
 
 The CI is already working and uses the secrets as defined in the dedicated [section](#secrets-in-the-ci).
 
@@ -114,7 +118,9 @@ In case it does, the renaming will most likely not work as intended or produce a
 
 The secrets needed by default by this project are described in [a previous section](#secrets-in-the-ci). If you fork/copy this repository you will have to create them and fill them with your own data.
 
-Note that the CI by default does not try to upload the code coverage when `dependabot` creates a commit. This is because of issue [#3253](https://github.com/dependabot/dependabot-core/issues/3253): you could change this behavior and rather also create the secrets in the `Dependabot` section of the project's settings.
+Note that the CI by default does not try to upload the code coverage when `dependabot` creates a commit. Similarly, the docker images are not pushed to/pulled from Dockerhub when `dependabot` is the actor.
+
+This is because of issue [#3253](https://github.com/dependabot/dependabot-core/issues/3253): you could change this behavior and rather also create the secrets in the `Dependabot` section of the project's settings.
 
 ## Use the configure_database script
 
@@ -125,9 +131,10 @@ The service comes configured with a test database having a dummy table. This is 
 When extending this project for a new service, you should probably modify the migrations in [database/template/migrations](database/template/migrations) to match what you want.
 
 To handle a first update to the database name and make sure that the service uses a database that matches its name, you can use the [configure-database.sh](scripts/configure-database.sh) script. It will take care of:
-* renaming the database to the new name.
-* updating the CI workflow to test the new database.
-* modify the configuration files from the template service to use the new database.
+
+- renaming the database to the new name.
+- updating the CI workflow to test the new database.
+- modify the configuration files from the template service to use the new database.
 
 You can run the following:
 
@@ -170,8 +177,9 @@ Note that this project is more intended to keep a single service per repository:
 Database definitions are living in the [database](database) folder. In case you need some new ones you can add them in the directory. The scripts provided in the template should allow to create/update/delete any database as they expect you to provide the path to the database to migrate.
 
 You will also need to update the CI to account for this new database:
-* in the [database-migration-tests](.github/workflows/database-migration-tests.yml): add a new step to migrate and verify the setup of the new database.
-* in the [build-and-push](.github/workflows/build-and-push.yml): add a step to configure the database for services (and packages) that need it.
+
+- in the [database-migration-tests](.github/workflows/database-migration-tests.yml): add a new step to migrate and verify the setup of the new database.
+- in the [build-and-push](.github/workflows/build-and-push.yml): add a step to configure the database for services (and packages) that need it.
 
 ## End-to-end testing
 
@@ -182,10 +190,11 @@ We tried to find some resources online to see common practices on how to E2E tes
 Over the course of the development of the services, we noticed that what is important is to verify that the service can be started properly from the docker image built by the CI.
 
 Exhaustive testing of the API endpoints is interesting as well but is partially covered by the unit tests. We might give a go at the approach but for now we chose to only limit the E2E testing to:
-* pull the docker image of the latest revision
-* spin it up and start it (with a database properly migrated)
-* query the healthcheck endpoint
-* assert that the response matches what we expect (200 OK and success response envelop).
+
+- pull the docker image of the latest revision
+- spin it up and start it (with a database properly migrated)
+- query the healthcheck endpoint
+- assert that the response matches what we expect (200 OK and success response envelop).
 
 This is likely to catch problems in case the configuration is not properly set or if the docker image is somehow broken. This is enough for our purpose.
 
@@ -194,8 +203,9 @@ We might revisit this approach in the future if needed.
 ## Deploying the service
 
 As mentioned in the [secrets](#secrets-in-the-ci) section, this project is configured to automatically update the deployment over at [ec2-deployment](https://github.com/Knoblauchpilze/ec2-deployment). This is achieved by:
-* pushing the docker image of the service to `dockerhub`.
-* triggering a commit to the `ec2-deployment` repository.
+
+- pushing the docker image of the service to `dockerhub`.
+- triggering a commit to the `ec2-deployment` repository.
 
 In case you have a similar workflow, it is easy to update the `DEPLOYMENT_TOKEN` to point to another repository and to modify the [CI workflow](.github/workflows/build-and-push.yml) in the `update-deployment` step to deploy to another repository.
 

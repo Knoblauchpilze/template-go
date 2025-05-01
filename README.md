@@ -19,7 +19,7 @@ By using this repository and adapting it for a new project you will get, out of 
 
 - a working server which you can extend with your own endpoints.
 - a working CI, which allows to verify your work, run your tests and publish the result of your implementation.
-- a way to make the service available in `dockerhub` through a docker image.
+- a way to make the service available in Docker Hub through a docker image.
 - the possibility to deploy automatically a new version of the service to a cluster management system.
 
 Assuming you install the [prerequisite tools](#prerequisites) you can get started by running two simple commands:
@@ -65,8 +65,8 @@ The CI workflows define several secrets that are expected to be created for the 
 | Secret             | Description                                                                                                                                         |
 | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | CODECOV_TOKEN      | A token generated from [codecov](https://about.codecov.io/) allowing to pubilsh the code coverage reports                                           |
-| DOCKERHUB_USERNAME | Obtained from your account over at [dockerhub](https://hub.docker.com/), allows to publish the docker image of the service                          |
-| DOCKERHUB_TOKEN    | Also taken from [dockerhub](https://hub.docker.com), this authenticates the request to publish to the repositories                                  |
+| DOCKERHUB_USERNAME | Obtained from your account over at [Docker Hub](https://hub.docker.com/), allows to publish the docker image of the service                         |
+| DOCKERHUB_TOKEN    | Also taken from [Docker Hub](https://hub.docker.com), this authenticates the request to publish to the repositories                                 |
 | DEPLOYMENT_TOKEN   | Used to trigger the automatic deployment of the service's latest version over at [ec2-deployment](https://github.com/Knoblauchpilze/ec2-deployment) |
 
 # How does this project work?
@@ -118,9 +118,25 @@ In case it does, the renaming will most likely not work as intended or produce a
 
 The secrets needed by default by this project are described in [a previous section](#secrets-in-the-ci). If you fork/copy this repository you will have to create them and fill them with your own data.
 
-Note that the CI by default does not try to upload the code coverage when `dependabot` creates a commit. Similarly, the docker images are not pushed to/pulled from Dockerhub when `dependabot` is the actor.
+Secrets come in multiple flavours: among others, actions secrets and dependabot secrets. The reasoning behind having both is to prevent malicious actors from using dependencies to access secrets (see issue [#3253](https://github.com/dependabot/dependabot-core/issues/3253) for more details).
 
-This is because of issue [#3253](https://github.com/dependabot/dependabot-core/issues/3253): you could change this behavior and rather also create the secrets in the `Dependabot` section of the project's settings.
+In this repository, 2 processes need access to secrets:
+
+- code coverage upload
+- docker image push/pull
+
+The choice was made to not try to upload the code coverage when `dependabot` creates a commit. This is because most often this should not impact the coverage and it should not be mandatory to assess whether an automatic update is needed or not.
+
+However, the CI **does** upload the docker image of the service to Docker Hub at the end of the `build-and-push-docker-image` CI step. This has two reasons:
+
+- it might be useful to test the docker image after an upgrade to a dependency and to do that we might want to access it in other environments
+- in the CI the E2E tests step also needs the docker image available: as it's a separate CI step it can't be found locally
+
+Therefore, it is necessary to create the related secrets (`DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`, see [this section](#secrets-in-the-ci)) both in the Actions section and in the Dependabot section (see screenshot below):
+
+![Secrets configuration](resources/secrets-configuration.png)
+
+Additionally in case you want to add more secrets or also see the code coverage for `dependabot` updates you can add the other ones in the Dependabot section of the project's settings.
 
 ## Use the configure_database script
 
@@ -204,12 +220,12 @@ We might revisit this approach in the future if needed.
 
 As mentioned in the [secrets](#secrets-in-the-ci) section, this project is configured to automatically update the deployment over at [ec2-deployment](https://github.com/Knoblauchpilze/ec2-deployment). This is achieved by:
 
-- pushing the docker image of the service to `dockerhub`.
+- pushing the docker image of the service to Docker Hub.
 - triggering a commit to the `ec2-deployment` repository.
 
 In case you have a similar workflow, it is easy to update the `DEPLOYMENT_TOKEN` to point to another repository and to modify the [CI workflow](.github/workflows/build-and-push.yml) in the `update-deployment` step to deploy to another repository.
 
-In case you don't use `dockerhub` but another system to store the docker image (or don't use docker images at all), then you might need to rewrite part of the CI workflow (namely the `build-and-push-docker-image` step).
+In case you don't use Docker Hub but another system to store the docker image (or don't use docker images at all), then you might need to rewrite part of the CI workflow (namely the `build-and-push-docker-image` step).
 
 Once updated, this should automatically trigger a commit in the `ec2-deployment` (or any other repository) with the latest update. The commit message should be explicit enough:
 

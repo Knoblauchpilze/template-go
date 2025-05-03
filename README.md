@@ -210,9 +210,9 @@ Exhaustive testing of the API endpoints is interesting as well but is partially 
 - pull the docker image of the latest revision
 - spin it up and start it (with a database properly migrated)
 - query the healthcheck endpoint
-- assert that the response matches what we expect (200 OK and success response envelop).
+- assert that the response matches what we expect (200 OK and success response envelope).
 
-This is likely to catch problems in case the configuration is not properly set or if the docker image is somehow broken. This is enough for our purpose.
+This is likely to catch problems in case the configuration is not properly set or if the docker image is somehow broken. This is enough for our purposes.
 
 We might revisit this approach in the future if needed.
 

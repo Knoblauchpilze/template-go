@@ -5,7 +5,7 @@ go 1.23.2
 toolchain go1.24.1
 
 require (
-	github.com/Knoblauchpilze/backend-toolkit v0.4.0
+	github.com/Knoblauchpilze/backend-toolkit v0.4.2
 	github.com/labstack/echo/v4 v4.13.3
 	github.com/stretchr/testify v1.10.0
 )

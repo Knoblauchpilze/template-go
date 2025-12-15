@@ -1,8 +1,6 @@
 module github.com/Knoblauchpilze/template-go
 
-go 1.23.2
-
-toolchain go1.24.1
+go 1.24.1
 
 require (
 	github.com/Knoblauchpilze/backend-toolkit v0.4.3

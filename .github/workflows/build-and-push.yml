@@ -223,6 +223,10 @@ jobs:
             -e ENV_DATABASE_PASSWORD=$DATABASE_PASSWORD \
             -p 1234:1234 \
             totocorpsoftwareinc/template-go:${{ needs.extract-service-tag.outputs.version }}
+
+          curl -v localhost:1234/v1/healthcheck
+          curl -s -w %{http_code} localhost:1234/v1/healthcheck
+
           echo "status_code=$(curl -s -o /dev/null -w %{http_code} localhost:1234/v1/healthcheck)" >> $GITHUB_OUTPUT
           echo "response_body=$(curl -s localhost:1234/v1/healthcheck)" >> $GITHUB_OUTPUT
           docker stop template-go-test

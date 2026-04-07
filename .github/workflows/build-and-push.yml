@@ -254,10 +254,6 @@ jobs:
         run: |
           echo ${{ steps.test-results.outputs.status_code }}
           echo ${{ steps.test-results.outputs.response_body }}
-      - name: Print service logs
-        # https://github.com/orgs/community/discussions/26097
-        if: failure() && steps.test-results.outcome == 'failure'
-        run: docker logs template-go-test 2>/dev/null || true
       - name: Verify status code
         run: |
           if [[ ${{ steps.test-results.outputs.status_code }} != '200' ]]; then

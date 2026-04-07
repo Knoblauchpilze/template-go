@@ -215,17 +215,33 @@ jobs:
         # https://superuser.com/questions/272265/getting-curl-to-output-http-status-code
         # https://stackoverflow.com/questions/24254064/how-to-get-curl-to-output-only-http-response-body-json-and-no-other-headers-et
         # https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/about-service-containers#running-jobs-on-the-runner-machine
+        # https://www.baeldung.com/ops/docker-compose-add-host
         run: |
           docker run \
             -d \
             --name template-go-test \
+            --add-host host.docker.internal:host-gateway \
             -e ENV_SERVER_PORT=$PORT \
+            -e ENV_DATABASE_HOST=host.docker.internal \
             -e ENV_DATABASE_PASSWORD=$DATABASE_PASSWORD \
             -p 1234:1234 \
             totocorpsoftwareinc/template-go:${{ needs.extract-service-tag.outputs.version }}
 
-          curl -v localhost:1234/v1/healthcheck
-          curl -s -w %{http_code} localhost:1234/v1/healthcheck
+          echo "Waiting for service to become ready..."
+          for i in $(seq 1 15); do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" localhost:1234/v1/healthcheck 2>/dev/null || echo "000")
+            if [ "$STATUS" = "200" ]; then
+              echo "Service is ready"
+              break
+            fi
+            if [ "$i" = "15" ]; then
+              echo "Service did not become ready in time"
+              docker logs template-go-test
+              exit 1
+            fi
+            echo "Not ready yet (status: $STATUS), retrying in 2s... ($i/15)"
+            sleep 2
+          done
 
           echo "status_code=$(curl -s -o /dev/null -w %{http_code} localhost:1234/v1/healthcheck)" >> $GITHUB_OUTPUT
           echo "response_body=$(curl -s localhost:1234/v1/healthcheck)" >> $GITHUB_OUTPUT
@@ -238,6 +254,10 @@ jobs:
         run: |
           echo ${{ steps.test-results.outputs.status_code }}
           echo ${{ steps.test-results.outputs.response_body }}
+      - name: Print service logs
+        # https://github.com/orgs/community/discussions/26097
+        if: failure() && steps.test-results.outcome == 'failure'
+        run: docker logs template-go-test 2>/dev/null || true
       - name: Verify status code
         run: |
           if [[ ${{ steps.test-results.outputs.status_code }} != '200' ]]; then

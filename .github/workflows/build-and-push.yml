@@ -212,6 +212,7 @@ jobs:
         run: |
           docker pull totocorpsoftwareinc/template-go:${{ needs.extract-service-tag.outputs.version }}
       - name: Test docker image
+        id: test-docker-image
         # https://superuser.com/questions/272265/getting-curl-to-output-http-status-code
         # https://stackoverflow.com/questions/24254064/how-to-get-curl-to-output-only-http-response-body-json-and-no-other-headers-et
         # https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/about-service-containers#running-jobs-on-the-runner-machine
@@ -250,13 +251,14 @@ jobs:
         env:
           PORT: 1234
           DATABASE_PASSWORD: manager_password
-      - name: Print service logs
-        if: always()
-        run: docker logs template-go-test 2>/dev/null || true
       - name: Print test results
         run: |
           echo ${{ steps.test-results.outputs.status_code }}
           echo ${{ steps.test-results.outputs.response_body }}
+      - name: Print service logs
+        # https://github.com/orgs/community/discussions/26097
+        if: failure() && steps.test-docker-image.outcome == 'failure'
+        run: docker logs template-go-test 2>/dev/null || true
       - name: Verify status code
         run: |
           if [[ ${{ steps.test-results.outputs.status_code }} != '200' ]]; then

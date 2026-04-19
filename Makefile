@@ -20,3 +20,6 @@ template-go-run:
 		-p 1234:1234 \
 		--network=host \
 		totocorpsoftwareinc/template-go:${GIT_COMMIT_HASH}
+
+publish-release:
+	./scripts/create-release.sh

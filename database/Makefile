@@ -4,7 +4,7 @@ DB_HOST ?= localhost
 DB_PORT ?= 5432
 DB_NAME ?= db_template_service
 DB_USER ?= template_service_admin
-DB_PASSWORD ?= "comes-this-from-environment"
+DB_PASSWORD ?= admin_password
 
 MIGRATION_STEPS ?= 1
 

@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/Knoblauchpilze/backend-toolkit v0.5.0
-	github.com/labstack/echo/v5 v5.1.0
+	github.com/labstack/echo/v5 v5.1.1
 	github.com/stretchr/testify v1.11.1
 )
 

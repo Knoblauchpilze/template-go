@@ -24,6 +24,7 @@ func TestIT_HealthcheckController(t *testing.T) {
 
 func TestIT_HealthcheckController_WhenConnectionClosed_ExpectServiceUnavailable(t *testing.T) {
 	conn := newTestConnection(t)
+	conn.Close(t.Context())
 
 	req := httptest.NewRequest(http.MethodGet, "/healtcheck", nil)
 	ctx, rw := generateTestEchoContextFromRequest(req)

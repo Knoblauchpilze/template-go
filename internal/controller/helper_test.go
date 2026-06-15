@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"context"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -15,8 +14,15 @@ import (
 var dbTestConfig = postgresql.NewConfigForLocalhost("db_template_service", "template_service_manager", "manager_password")
 
 func newTestConnection(t *testing.T) db.Connection {
-	conn, err := db.New(context.Background(), dbTestConfig)
-	require.Nil(t, err)
+	t.Helper()
+
+	conn, err := db.New(t.Context(), dbTestConfig)
+	require.NoError(t, err, "Actual err: %v", err)
+
+	t.Cleanup(func() {
+		conn.Close(t.Context())
+	})
+
 	return conn
 }
 

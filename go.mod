@@ -3,7 +3,7 @@ module github.com/Knoblauchpilze/template-go
 go 1.26.0
 
 require (
-	github.com/Knoblauchpilze/backend-toolkit v0.6.6
+	github.com/Knoblauchpilze/backend-toolkit v0.7.0
 	github.com/labstack/echo/v5 v5.3.0
 	github.com/stretchr/testify v1.11.1
 )

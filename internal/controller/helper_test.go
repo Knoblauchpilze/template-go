@@ -1,13 +1,18 @@
 package controller
 
 import (
+	"bytes"
+	"encoding/json"
+	"io"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/Knoblauchpilze/backend-toolkit/pkg/db"
 	"github.com/Knoblauchpilze/backend-toolkit/pkg/db/postgresql"
-	"github.com/labstack/echo/v5"
+	"github.com/Knoblauchpilze/backend-toolkit/pkg/rest"
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
 )
 
@@ -26,10 +31,73 @@ func newTestConnection(t *testing.T) db.Connection {
 	return conn
 }
 
-func generateTestEchoContextFromRequest(req *http.Request) (*echo.Context, *httptest.ResponseRecorder) {
-	e := echo.New()
-	rw := httptest.NewRecorder()
+func generateTestRequest(
+	t *testing.T,
+	method string,
+	modifiers ...func(*testing.T, *http.Request),
+) *http.Request {
+	t.Helper()
 
-	ctx := e.NewContext(req, rw)
-	return ctx, rw
+	ctx := rest.WithContextLogger(t.Context(), slog.Default())
+	req := httptest.NewRequestWithContext(ctx, method, "/", nil)
+
+	for _, modifier := range modifiers {
+		modifier(t, req)
+	}
+
+	return req
+}
+
+func generateTestRequestWithJsonBody[T any](
+	t *testing.T,
+	method string,
+	data T,
+) *http.Request {
+	ctx := rest.WithContextLogger(t.Context(), slog.Default())
+	req := httptest.NewRequestWithContext(ctx, method, "/", encodeBody(t, data))
+	req.Header.Set("Content-Type", "application/json")
+	return req
+}
+
+func createTestGinRouter(
+	t *testing.T,
+	method string,
+	path string,
+	handler gin.HandlerFunc,
+	middlewares ...gin.HandlerFunc,
+) *gin.Engine {
+	t.Helper()
+
+	r := gin.New()
+
+	for _, middleware := range middlewares {
+		r.Use(middleware)
+	}
+
+	r.Handle(method, path, handler)
+
+	return r
+}
+
+func encodeBody[T any](t *testing.T, data T) io.Reader {
+	t.Helper()
+
+	out, err := json.Marshal(data)
+	require.NoError(t, err, "Actual err: %v", err)
+
+	return bytes.NewReader(out)
+}
+
+func decodeResponseBody[T any](t *testing.T, w *httptest.ResponseRecorder) T {
+	t.Helper()
+
+	var responseBody T
+
+	rawBody, err := io.ReadAll(w.Result().Body)
+	require.NoError(t, err, "Actual err: %v", err)
+
+	err = json.Unmarshal(rawBody, &responseBody)
+	require.NoError(t, err, "Actual err: %v", err)
+
+	return responseBody
 }

@@ -5,38 +5,43 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/Knoblauchpilze/backend-toolkit/pkg/errors"
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestIT_HealthcheckController(t *testing.T) {
-	conn := newTestConnection(t)
+	gin.SetMode(gin.TestMode)
 
-	req := httptest.NewRequest(http.MethodGet, "/healtcheck", nil)
-	ctx, rw := generateTestEchoContextFromRequest(req)
+	t.Run("returns ok when connection is healthy", func(t *testing.T) {
+		conn := newTestConnection(t)
+		handler := createServiceAwareHttpHandler(healthcheck, conn)
 
-	err := healthcheck(ctx, conn)
-	require.NoError(t, err, "Actual err: %v", err)
+		r := createTestGinRouter(t, http.MethodGet, "/", handler)
 
-	assert.Equal(t, http.StatusOK, rw.Code)
-	assert.Equal(t, "\"OK\"\n", rw.Body.String())
-}
+		req := generateTestRequest(t, http.MethodGet)
+		rw := httptest.NewRecorder()
+		r.ServeHTTP(rw, req)
 
-func TestIT_HealthcheckController_WhenConnectionClosed_ExpectServiceUnavailable(t *testing.T) {
-	conn := newTestConnection(t)
-	conn.Close(t.Context())
+		assert.Equal(t, http.StatusOK, rw.Code)
+		actual := decodeResponseBody[string](t, rw)
+		assert.Equal(t, "OK", actual)
+	})
 
-	req := httptest.NewRequest(http.MethodGet, "/healtcheck", nil)
-	ctx, rw := generateTestEchoContextFromRequest(req)
+	t.Run("returns error when connection is not healthy", func(t *testing.T) {
+		conn := newTestConnection(t)
+		conn.Close(t.Context())
+		handler := createServiceAwareHttpHandler(healthcheck, conn)
 
-	err := healthcheck(ctx, conn)
-	require.NoError(t, err, "Actual err: %v", err)
+		r := createTestGinRouter(t, http.MethodGet, "/", handler)
 
-	assert.Equal(t, http.StatusServiceUnavailable, rw.Code)
-	expectedResponse := `
-	{
-		"code": 100,
-		"message": "an unexpected error occurred"
-	}`
-	assert.JSONEq(t, expectedResponse, rw.Body.String())
+		req := generateTestRequest(t, http.MethodGet)
+		rw := httptest.NewRecorder()
+		r.ServeHTTP(rw, req)
+
+		assert.Equal(t, http.StatusServiceUnavailable, rw.Code)
+		actual := decodeResponseBody[errors.ErrorWithCode](t, rw)
+		assert.Equal(t, errors.ErrorCode(100), actual.Code)
+		assert.Equal(t, "an unexpected error occurred", actual.Message)
+	})
 }

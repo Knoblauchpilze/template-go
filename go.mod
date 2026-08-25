@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/Knoblauchpilze/backend-toolkit v0.8.1
-	github.com/labstack/echo/v5 v5.3.1
+	github.com/gin-gonic/gin v1.12.0
 	github.com/stretchr/testify v1.12.1
 )
 
@@ -17,7 +17,6 @@ require (
 	github.com/gabriel-vasile/mimetype v1.4.12 // indirect
 	github.com/gin-contrib/cors v1.7.7 // indirect
 	github.com/gin-contrib/sse v1.1.0 // indirect
-	github.com/gin-gonic/gin v1.12.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.30.1 // indirect

@@ -1,4 +1,4 @@
-// Package main starts the templae app HTTP server.
+// Package main starts the template app HTTP server.
 //
 // @title App API
 // @version 1.0

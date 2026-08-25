@@ -1,7 +1,5 @@
 github.com/Knoblauchpilze/backend-toolkit v0.8.1 h1:k+rKUxYYsdIQj6tfXa8Q0x/aPtQKzF2LgroQE9oQUzM=
 github.com/Knoblauchpilze/backend-toolkit v0.8.1/go.mod h1:3HH9/qA4UlLjv/j95+iwYoD4Erp6sCy+zniN3pwJsRU=
-github.com/Knoblauchpilze/user-service v0.0.0-20260824184842-b817efba2f9f h1:l1BG+w5X7znLgStbMwpCEkHtgxqfqJmfNV2V82CGgqY=
-github.com/Knoblauchpilze/user-service v0.0.0-20260824184842-b817efba2f9f/go.mod h1:uFxUsNRyL2Oua0bhfdhU9NUs26uvTHpYHutOk9leF58=
 github.com/KyleBanks/depth v1.2.1 h1:5h8fQADFrWtarTdtDudMmGsC7GPbOAu6RVB3ffsVFHc=
 github.com/KyleBanks/depth v1.2.1/go.mod h1:jzSb9d0L43HxTQfT+oSA1EEp2q+ne2uh6XgeJcm8brE=
 github.com/bytedance/gopkg v0.1.3 h1:TPBSwH8RsouGCBcMBktLt1AymVo2TVsBVCY4b6TnZ/M=

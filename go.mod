@@ -4,7 +4,6 @@ go 1.26.0
 
 require (
 	github.com/Knoblauchpilze/backend-toolkit v0.8.1
-	github.com/Knoblauchpilze/user-service v0.0.0-20260824184842-b817efba2f9f
 	github.com/gin-gonic/gin v1.12.0
 	github.com/stretchr/testify v1.12.1
 	github.com/swaggo/files v1.0.1
@@ -49,6 +48,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
 	github.com/quic-go/qpack v0.6.0 // indirect
 	github.com/quic-go/quic-go v0.59.0 // indirect
+	github.com/rogpeppe/go-internal v1.13.1 // indirect
 	github.com/rs/zerolog v1.35.1 // indirect
 	github.com/sagikazarmark/locafero v0.11.0 // indirect
 	github.com/sourcegraph/conc v0.3.1-0.20240121214520-5f936abd7ae8 // indirect

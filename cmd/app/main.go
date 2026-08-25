@@ -41,8 +41,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	log.Info("c: %+v", conf.Database)
-
 	conn, err := db.New(context.Background(), conf.Database)
 	if err != nil {
 		log.Error("Failed to create db connection", slog.Any("error", err))

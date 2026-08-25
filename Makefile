@@ -1,6 +1,7 @@
 
 # https://stackoverflow.com/questions/34712972/in-a-makefile-how-can-i-fetch-and-assign-a-git-commit-hash-to-a-variable
 GIT_COMMIT_HASH=$(shell git rev-parse --short HEAD)
+SWAG_VERSION ?= v2.0.0-rc5
 GOLANGCI_LINT_VERSION ?= v2.12.2
 SERVER_PORT=60004
 DATABASE_HOST=127.0.0.1
@@ -21,6 +22,18 @@ template-go-run:
 		-p 1234:1234 \
 		--network=host \
 		totocorpsoftwareinc/template-go:${GIT_COMMIT_HASH}
+
+generate-api-spec:
+	cd cmd/app && \
+	go run github.com/swaggo/swag/v2/cmd/swag@${SWAG_VERSION} init \
+		--v3.1 \
+		--generalInfo main.go \
+		--dir .,../../internal/controller \
+		--output ../../api \
+		--outputTypes go,yaml \
+		--parseDependency \
+		--parseInternal \
+		--generatedTime=false
 
 publish-release:
 	./scripts/create-release.sh

@@ -1,3 +1,10 @@
+// Package main starts the templae app HTTP server.
+//
+// @title App API
+// @version 1.0
+// @description HTTP API for a template application.
+// @servers.url /v1
+// @servers.description Base path for the app API
 package main
 
 import (
@@ -12,6 +19,7 @@ import (
 	"github.com/Knoblauchpilze/backend-toolkit/pkg/server"
 	"github.com/Knoblauchpilze/template-go/cmd/app/internal"
 	"github.com/Knoblauchpilze/template-go/internal/controller"
+	"github.com/gin-gonic/gin"
 )
 
 func determineConfigName() string {
@@ -25,11 +33,15 @@ func determineConfigName() string {
 func main() {
 	log := logger.New(os.Stdout)
 
+	gin.SetMode(gin.ReleaseMode)
+
 	conf, err := config.Load(determineConfigName(), internal.DefaultConfig())
 	if err != nil {
 		log.Error("Failed to load configuration", slog.Any("error", err))
 		os.Exit(1)
 	}
+
+	log.Info("c: %+v", conf.Database)
 
 	conn, err := db.New(context.Background(), conf.Database)
 	if err != nil {
@@ -44,6 +56,17 @@ func main() {
 		if err := s.AddRoute(route); err != nil {
 			log.Error("Failed to register route", slog.String("route", route.Path()), slog.Any("error", err))
 			os.Exit(1)
+		}
+	}
+
+	swaggerRoutes, err := internal.SwaggerEndpoints(conf.Server)
+	if err != nil {
+		log.Error("Failed to create swagger routes", slog.Any("error", err))
+		os.Exit(1)
+	}
+	for _, route := range swaggerRoutes {
+		if err := s.AddRoute(route); err != nil {
+			log.Error("Failed to register route", slog.String("route", route.Path()), slog.Any("error", err))
 		}
 	}
 

@@ -1,0 +1,61 @@
+components:
+  schemas:
+    rest.ResponseEnvelope-string:
+      properties:
+        details:
+          type: string
+        request_id:
+          example: 669cd40f-ea15-40a8-ab03-81e704a3ecf9
+          format: uuid
+          type: string
+        status:
+          $ref: '#/components/schemas/rest.Status'
+        status_code:
+          example: 200
+          type: integer
+      required:
+      - details
+      - request_id
+      - status
+      - status_code
+      type: object
+    rest.Status:
+      enum:
+      - SUCCESS
+      - ERROR
+      example: SUCCESS
+      type: string
+      x-enum-varnames:
+      - StatusSuccess
+      - StatusError
+externalDocs:
+  description: ""
+  url: ""
+info:
+  description: HTTP API for a template application.
+  title: App API
+  version: "1.0"
+openapi: 3.1.0
+paths:
+  /healthcheck:
+    get:
+      description: Verifies that the service can reach its database.
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.ResponseEnvelope-string'
+          description: OK
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.ResponseEnvelope-string'
+          description: Database unavailable
+      summary: Health check
+      tags:
+      - health
+servers:
+- description: Base path for the app API
+  url: /v1

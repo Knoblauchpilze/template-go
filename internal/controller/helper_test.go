@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"bytes"
 	"encoding/json"
 	"io"
 	"log/slog"
@@ -48,17 +47,6 @@ func generateTestRequest(
 	return req
 }
 
-func generateTestRequestWithJsonBody[T any](
-	t *testing.T,
-	method string,
-	data T,
-) *http.Request {
-	ctx := rest.WithContextLogger(t.Context(), slog.Default())
-	req := httptest.NewRequestWithContext(ctx, method, "/", encodeBody(t, data))
-	req.Header.Set("Content-Type", "application/json")
-	return req
-}
-
 func createTestGinRouter(
 	t *testing.T,
 	method string,
@@ -77,15 +65,6 @@ func createTestGinRouter(
 	r.Handle(method, path, handler)
 
 	return r
-}
-
-func encodeBody[T any](t *testing.T, data T) io.Reader {
-	t.Helper()
-
-	out, err := json.Marshal(data)
-	require.NoError(t, err, "Actual err: %v", err)
-
-	return bytes.NewReader(out)
 }
 
 func decodeResponseBody[T any](t *testing.T, w *httptest.ResponseRecorder) T {

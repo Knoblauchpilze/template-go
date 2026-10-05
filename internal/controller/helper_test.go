@@ -17,7 +17,7 @@ import (
 
 var dbTestConfig = postgresql.NewConfigForLocalhost("db_template_service", "template_service_manager", "manager_password")
 
-func newTestConnection(t *testing.T) db.Connection {
+func newTestConnection(t *testing.T) *db.Connection {
 	t.Helper()
 
 	conn, err := db.New(t.Context(), dbTestConfig)

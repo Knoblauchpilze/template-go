@@ -3,7 +3,7 @@ module github.com/Knoblauchpilze/template-go
 go 1.26.0
 
 require (
-	github.com/Knoblauchpilze/backend-toolkit v0.8.3
+	github.com/Knoblauchpilze/backend-toolkit v0.8.4
 	github.com/gin-gonic/gin v1.12.0
 	github.com/stretchr/testify v1.12.1
 	github.com/swaggo/files v1.0.1
@@ -19,7 +19,7 @@ require (
 	github.com/cloudwego/base64x v0.1.7 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.13 // indirect
-	github.com/gin-contrib/cors v1.7.8 // indirect
+	github.com/gin-contrib/cors v1.7.9 // indirect
 	github.com/gin-contrib/sse v1.1.1 // indirect
 	github.com/go-openapi/jsonpointer v0.19.6 // indirect
 	github.com/go-openapi/jsonreference v0.20.2 // indirect
@@ -64,7 +64,7 @@ require (
 	go.mongodb.org/mongo-driver/v2 v2.8.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/arch v0.29.0 // indirect
-	golang.org/x/crypto v0.55.0 // indirect
+	golang.org/x/crypto v0.56.0 // indirect
 	golang.org/x/net v0.57.0 // indirect
 	golang.org/x/sync v0.22.0 // indirect
 	golang.org/x/sys v0.47.0 // indirect
